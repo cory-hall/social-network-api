@@ -56,8 +56,8 @@ const userController = {
   //  "username": "foo",
   //  "email": "foo@bar.com" **MUST BE A CORRECT EMAIL**
   //}
-  updateUser({ params }, res) {
-    User.findOneAndDelete({ _id: params.id })
+  updateUser({ params, body }, res) {
+    User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
       .then(dbData => {
         if (!dbData) {
           res.status(404).json({ message: 'No user found with this id!' });
@@ -73,8 +73,8 @@ const userController = {
 
   // delete a user by `id` and all their associations
   // DELETE @ /api/users/:id
-  deleteUser({ params, body }, res) {
-    User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+  deleteUser({ params }, res) {
+    User.findOneAndDelete({ _id: params.id })
       .then(dbData => {
         if (!dbData) {
           res.status(404).json({ message: 'No user found with this id!' });

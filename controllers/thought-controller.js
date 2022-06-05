@@ -103,7 +103,7 @@ const thoughtController = {
           res.status(404).json({ message: 'No thought found with this id!' });
           return;
         }
-        User.findByIdAndUpdate(
+        User.findOneAndUpdate(
           { username: dbData.username },
           { $pull: { thoughts: params.id } }
         )
@@ -126,7 +126,7 @@ const thoughtController = {
   // EXPECTED
   //{
   //  "reactionBody": "Foo",
-  //  "userName": "Bar"
+  //  "username": "Bar"
   //}
   addReaction({ params, body }, res) {
     Thought.findOneAndUpdate(
@@ -151,9 +151,9 @@ const thoughtController = {
   // DELETE @ /api/thoughts/:thoughtId/reactions
   // body is expected to contain the reactionId from the Thought instance
   deleteReaction({ params, body }, res) {
-    Thought.findOneAndDelete(
+    Thought.findOneAndUpdate(
       { _id: params.thoughtId },
-      { $pull: { reactions: body.reactionId } },
+      { $pull: { reactions: { reactionId: body.reactionId }}},
       { new: true, runValidators: true }
     )
       .then(dbData => {
