@@ -49,6 +49,28 @@ const userController = {
       .catch(err => res.status(400).json(err));
   },
 
+  // update a user by `id`
+  // PUT @ /api/users/:id
+  // EXPECTS
+  //{
+  //  "username": "foo",
+  //  "email": "foo@bar.com" **MUST BE A CORRECT EMAIL**
+  //}
+  updateUser({ params }, res) {
+    User.findOneAndDelete({ _id: params.id })
+      .then(dbData => {
+        if (!dbData) {
+          res.status(404).json({ message: 'No user found with this id!' });
+          return;
+        }
+        res.json(dbData)
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400).json(err);
+      })
+  },
+
   // delete a user by `id` and all their associations
   // DELETE @ /api/users/:id
   deleteUser({ params, body }, res) {
@@ -70,28 +92,6 @@ const userController = {
               .catch(err => res.status(400).json(err));
           })
           .catch(err => res.status(400).json(err));
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(400).json(err);
-      })
-  },
-
-  // update a user by `id`
-  // PUT @ /api/users/:id
-  // EXPECTS
-  //{
-  //  "username": "foo",
-  //  "email": "foo@bar.com" **MUST BE A CORRECT EMAIL**
-  //}
-  updateUser({ params }, res) {
-    User.findOneAndDelete({ _id: params.id })
-      .then(dbData => {
-        if (!dbData) {
-          res.status(404).json({ message: 'No user found with this id!' });
-          return;
-        }
-        res.json(dbData)
       })
       .catch(err => {
         console.log(err);
